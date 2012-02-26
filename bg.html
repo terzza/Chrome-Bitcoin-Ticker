@@ -1,0 +1,109 @@
+<html>
+<head>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+</head>
+<body>
+<script>
+    defaultDisplay = window.localStorage.getItem('default-display');
+    if (defaultDisplay == null){
+        defaultDisplay = 'mtgox-buy';
+        window.localStorage.setItem('default-display', 'mtgox-buy');
+    }
+    chrome.browserAction.setBadgeBackgroundColor({color:[0, 0, 0, 150]});
+    updateTicker();
+    setTimeout("updateTicker()", 1000);
+    setInterval("updateTicker()", 60000);
+
+    chrome.browserAction.onClicked.addListener(function(tab) {
+        updateTicker();
+    });
+
+    function updateTicker(){
+        getMtgox();
+        getBritcoin();
+        getTradehill();
+        getBitomat();
+        getBitcoin7();
+        chrome.browserAction.setBadgeText({	text: String(window.localStorage.getItem(window.localStorage.getItem('default-display')))});
+    }
+    function getMtgox() {
+        $.getJSON('https://mtgox.com/code/data/ticker.php', function(data) {
+            window.localStorage.setItem('mtgox-high',Number(data["ticker"]["high"]));
+            window.localStorage.setItem('mtgox-low',Number(data["ticker"]["low"]));
+            window.localStorage.setItem('mtgox-buy',Number(data["ticker"]["buy"]));
+            window.localStorage.setItem('mtgox-sell',Number(data["ticker"]["sell"]));
+        });
+    }
+
+    function getBitcoin7() {
+        $.getJSON('http://bitcoin7.com/api/charts/USD/ticker.json', function(data) {
+            window.localStorage.setItem('bitcoin7-high',Number(data["ticker"]["high"]));
+            window.localStorage.setItem('bitcoin7-low',Number(data["ticker"]["low"]));
+            window.localStorage.setItem('bitcoin7-buy',Number(data["ticker"]["buy"]));
+            window.localStorage.setItem('bitcoin7-sell',Number(data["ticker"]["sell"]));
+        });
+    }
+
+    function getBritcoin() {
+        $.getJSON('https://britcoin.co.uk/api/ticker.php', function(data) {
+            window.localStorage.setItem('britcoin-buy',Number(data["ticker"]["buy"]));
+            window.localStorage.setItem('britcoin-sell',Number(data["ticker"]["sell"]));
+        });
+        $.getJSON('https://britcoin.co.uk/api/getTrades.php', function(data) {
+            var bounds = parseTrades(data);
+            minPrice = bounds[0]
+            maxPrice = bounds[1]
+            window.localStorage.setItem('britcoin-high', Number(maxPrice));
+            window.localStorage.setItem('britcoin-low',Number(minPrice));
+        });
+    }
+
+    function getTradehill() {
+        $.getJSON('https://api.tradehill.com/APIv1/USD/Ticker', function(data) {
+            window.localStorage.setItem('tradehill-buy',Number(data["ticker"]["buy"]));
+            window.localStorage.setItem('tradehill-sell',Number(data["ticker"]["sell"]));
+        });
+        $.getJSON('https://api.tradehill.com/APIv1/USD/Trades', function(data) {
+            var bounds = parseTrades(data);
+            minPrice = bounds[0]
+            maxPrice = bounds[1]
+            window.localStorage.setItem('tradehill-high', Number(maxPrice));
+            window.localStorage.setItem('tradehill-low',Number(minPrice));
+        });
+    }
+
+    function getBitomat() {
+        $.getJSON('https://bitomat.pl/code/data/ticker.php', function(data) {
+            window.localStorage.setItem('bitomat-buy',Number(data["ticker"]["buy"]));
+            window.localStorage.setItem('bitomat-sell',Number(data["ticker"]["sell"]));
+        });
+        $.getJSON('https://bitomat.pl/code/data/gettrades.php', function(data) {
+            var bounds = parseTrades(data);
+            minPrice = bounds[0]
+            maxPrice = bounds[1]
+            window.localStorage.setItem('bitomat-high', Number(maxPrice));
+            window.localStorage.setItem('bitomat-low',Number(minPrice));
+        });
+    }
+
+    function parseTrades(data) {
+        prices = [];
+        minPrice = Number(data[0]['price']);
+        maxPrice = Number(data[0]['price']);
+        for (var x in data){
+            price = Number(data[x]['price']);
+            prices.push(price);
+            if (price < minPrice) {
+                minPrice = price;
+            }
+            if (price > maxPrice) {
+                maxPrice = price;
+            }
+        }
+        return [minPrice, maxPrice];
+    }
+
+</script>
+</body>
+</html>
