@@ -4,7 +4,7 @@
 
     <link href='http://fonts.googleapis.com/css?family=Maven+Pro' rel='stylesheet' type='text/css'>
 </head>
-<body onload="startUp()">
+<body>
 
 <style>
 body {
@@ -45,7 +45,7 @@ td.title {
 </style>
 
 
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+<script type="text/javascript" src="jquery.min.js"></script>
 
 <img src="bcicon.png"/>
 
@@ -57,30 +57,6 @@ td.title {
     <td><span id="mtgox-buy"></span></td>
     <td><span id="mtgox-sell"></span></td>
 </tr>
-<tr><td><a href="#" onclick="chrome.tabs.create({'url': 'https://www.tradehill.com/'})">TradeHill</a></td>
-    <td><span id="tradehill-high"></span></td>
-    <td><span id="tradehill-low"></span></td>
-    <td><span id="tradehill-buy"></span></td>
-    <td><span id="tradehill-sell"></span></td>
-</tr>
-<tr><td><a href="#" onclick="chrome.tabs.create({'url': 'https://bitcoin7.com/'})">Bitcoin7</a></td>
-    <td><span id="bitcoin7-high"></span></td>
-    <td><span id="bitcoin7-low"></span></td>
-    <td><span id="bitcoin7-buy"></span></td>
-    <td><span id="bitcoin7-sell"></span></td>
-</tr>
-<tr><td><a href="#" onclick="chrome.tabs.create({'url': 'https://bitomat.pl/'})">Bitomat</a></td>
-    <td><span id="bitomat-high"></span></td>
-    <td><span id="bitomat-low"></span></td>
-    <td><span id="bitomat-buy"></span></td>
-    <td><span id="bitomat-sell"></span></td>
-</tr>
-<tr><td><a href="#" onclick="chrome.tabs.create({'url': 'https://britcoin.co.uk/'})">BritCoin</a></td>
-    <td><span id="britcoin-high"></span></td>
-    <td><span id="britcoin-low"></span></td>
-    <td><span id="britcoin-buy"></span></td>
-    <td><span id="britcoin-sell"></span></td>
-</tr>
 </table>
 
 <p>Default Value : 
@@ -89,74 +65,12 @@ td.title {
   <option value="mtgox-low">MTGox Low</option>
   <option value="mtgox-buy">MTGox Buy</option>
   <option value="mtgox-sell">MTGox Sell</option>
-  <option value="tradehill-high">TradeHill High</option>
-  <option value="tradehill-low">TradeHill Low</option>
-  <option value="tradehill-buy">TradeHill Buy</option>
-  <option value="tradehill-sell">TradeHill Sell</option>
-  <option value="bitcoin7-high">BitCoin7 High</option>
-  <option value="bitcoin7-low">BitCoin7 Low</option>
-  <option value="bitcoin7-buy">BitCoin7 Buy</option>
-  <option value="bitcoin7-sell">BitCoin7 Sell</option>
-  <option value="bitomat-high">Bitomat High</option>
-  <option value="bitomat-low">Bitomat Low</option>
-  <option value="bitomat-buy">Bitomat Buy</option>
-  <option value="bitomat-sell">Bitomat Sell</option>
-  <option value="britcoin-high">BritCoin High</option>
-  <option value="britcoin-low">BritCoin Low</option>
-  <option value="britcoin-buy">BritCoin Buy</option>
-  <option value="britcoin-sell">BritCoin Sell</option>
 </select>
 </p>
 
 <p class="info">Comments/Suggestions <a href="#" onclick="chrome.tabs.create({'url': 'http://twitter.com/MTerzza'})">@MTerzza</a></p>
 
-<script>
-    function startUp() {
-        setTimeout('updateValues();', 100);
-        defaultDisplay = window.localStorage.getItem('default-display');
-        var sel = document.getElementsByTagName('select')[0]
-        for (var i=0;i<sel.options.length;i++) {
-            if (sel.options[i].value == defaultDisplay) {
-                sel.selectedIndex = i;
-            }
-        };
-    }
-
-    function displayChanged() {
-        var sel = document.getElementsByTagName('select')[0]
-        newValue = sel.options[sel.selectedIndex].value;
-        window.localStorage.setItem('default-display', newValue);
-        chrome.extension.getBackgroundPage().updateTicker();
-    }
-
-    function updateValues(){
-        chrome.extension.getBackgroundPage().updateTicker();
-        $('#mtgox-high').html("&#36;&nbsp;"+Number(window.localStorage.getItem('mtgox-high')).toFixed(2));
-        $('#mtgox-low').html("&#36;&nbsp;"+Number(window.localStorage.getItem('mtgox-low')).toFixed(2));
-        $('#mtgox-buy').html("&#36;&nbsp;"+Number(window.localStorage.getItem('mtgox-buy')).toFixed(2));
-        $('#mtgox-sell').html("&#36;&nbsp;"+Number(window.localStorage.getItem('mtgox-sell')).toFixed(2));
-
-        $('#britcoin-high').html("&#163;&nbsp;"+Number(window.localStorage.getItem('britcoin-high')).toFixed(2));
-        $('#britcoin-low').html("&#163;&nbsp;"+Number(window.localStorage.getItem('britcoin-low')).toFixed(2));
-        $('#britcoin-buy').html("&#163;&nbsp;"+Number(window.localStorage.getItem('britcoin-buy')).toFixed(2));
-        $('#britcoin-sell').html("&#163;&nbsp;"+Number(window.localStorage.getItem('britcoin-sell')).toFixed(2));
-
-        $('#bitcoin7-high').html("&#36;&nbsp;"+Number(window.localStorage.getItem('bitcoin7-high')).toFixed(2));
-        $('#bitcoin7-low').html("&#36;&nbsp;"+Number(window.localStorage.getItem('bitcoin7-low')).toFixed(2));
-        $('#bitcoin7-buy').html("&#36;&nbsp;"+Number(window.localStorage.getItem('bitcoin7-buy')).toFixed(2));
-        $('#bitcoin7-sell').html("&#36;&nbsp;"+Number(window.localStorage.getItem('bitcoin7-sell')).toFixed(2));
-
-        $('#tradehill-high').html("&#36;&nbsp;"+Number(window.localStorage.getItem('tradehill-high')).toFixed(2));
-        $('#tradehill-low').html("&#36;&nbsp;"+Number(window.localStorage.getItem('tradehill-low')).toFixed(2));
-        $('#tradehill-buy').html("&#36;&nbsp;"+Number(window.localStorage.getItem('tradehill-buy')).toFixed(2));
-        $('#tradehill-sell').html("&#36;&nbsp;"+Number(window.localStorage.getItem('tradehill-sell')).toFixed(2));
-
-        $('#bitomat-high').html("zł&nbsp;"+Number(window.localStorage.getItem('bitomat-high')).toFixed(2));
-        $('#bitomat-low').html("zł&nbsp;"+Number(window.localStorage.getItem('bitomat-low')).toFixed(2));
-        $('#bitomat-buy').html("zł&nbsp;"+Number(window.localStorage.getItem('bitomat-buy')).toFixed(2));
-        $('#bitomat-sell').html("zł&nbsp;"+Number(window.localStorage.getItem('bitomat-sell')).toFixed(2));
-    }
-</script>
+<script src='popup.js'></script>
 
 </body>
 </html>
