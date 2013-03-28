@@ -29,11 +29,5 @@ Add the unpacked source by visiting `chrome://extensions/` in Chrome / Chromium.
 
 Or click on the "ADD TO CHROME" link on the webstore page.
 
-Addendum
---------
-
-Updated by XertroV to work with data.mtgox.com instead of mtgox.com.
-
-Also removed the other exchanges.
 
 
